@@ -38,6 +38,26 @@ app.use(express.json());
         res.send(result);
     })
 
+    // GET USER DATA BY MOBILE/EMAIL
+    app.get('/users/:username', async(req, res)=>{
+        const username = req.params.username;
+        let result;
+        // const result = await userCollection.findOne({user_email:email});
+        if (username.includes('@')) {
+            // User entered an email
+            result = await userCollection.findOne({ email: username });
+          } else {
+            // User entered a phone number
+            result = await userCollection.findOne({ phone: username });
+          }
+        
+          if (result) {
+            res.send(result);
+          } else {
+            res.status(404).send({ message: 'User not found' });
+          }
+      })
+
     // ADDING USER TO DATABASE WHEN REGISTERING
     app.post('/users', async(req, res)=>{
         const user = req.body;
