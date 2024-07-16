@@ -32,6 +32,14 @@ app.use(express.json());
 
     const userCollection = client.db("mudraDB").collection("users");
 
+     // JWT
+     app.post('/jwt', async (req, res) => {
+        const user = req.body;
+        const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { 
+            expiresIn: '1h' });
+        res.send({ token });
+    })
+
     // FETCHING USER DATA
     app.get('/users', async(req, res)=>{
         const result = await userCollection.find().toArray();
